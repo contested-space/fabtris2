@@ -144,6 +144,33 @@ struct fabtrimino* fab_make(enum shape shape)
     return fab;
 }
 
+void free_square(struct square* square)
+{
+    free(square);
+}
+
+
+void fab_free(struct fabtrimino* fab)
+{
+    for (int i = 0; i < 4; i++) // TODO: change the 4 to matrix.size once the matrix is a struct
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (fab->matrix[i][j] != NULL)
+            {
+                free_square(fab->matrix[i][j]);
+            }
+        }
+        free(fab->matrix[i]);
+    }
+    free(fab->matrix);
+    if (fab->pos != NULL)
+    {
+        free(fab->pos);
+    }
+    free(fab);
+}
+
 struct color {
     Uint8 r;
     Uint8 g;
@@ -199,8 +226,6 @@ struct color shape_color(enum shape shape)
 
 void draw_square(struct square* square, struct vector* position, SDL_Renderer* renderer)
 {
-
-    //TODO replace with a color based on square->shape
     struct color color = shape_color(square->shape);
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF);
@@ -230,9 +255,4 @@ void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* off
         }
     }
 
-}
-
-void fab_free_square(struct square* square)
-{
-    free(square);
 }

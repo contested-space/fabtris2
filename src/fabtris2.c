@@ -3,6 +3,7 @@
 #include<stddef.h>
 
 #include "common.h"
+#include "fabtrimino.h"
 #include "next.h"
 
 SDL_Window* createWindow(const char* title)
@@ -59,7 +60,8 @@ int main(int argc, char* args[])
             }
             if (e.type == SDL_KEYDOWN)
             {
-                next_pull(next_screen);
+                struct fabtrimino* fab = next_pull(next_screen);
+                fab_free(fab);
             }
         }
         SDL_RenderSetViewport(renderer, &fullViewport);
