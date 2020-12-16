@@ -1,6 +1,6 @@
-#include<next.h>
-#include<fabtrimino.h>
-#include <stdlib.h>
+#include<stdlib.h>
+#include "next.h"
+#include "fabtrimino.h"
 
 const size_t NB_NEXT = 5;
 
@@ -14,7 +14,6 @@ struct next {
 struct next* next_make(SDL_Renderer* renderer, SDL_Rect* viewport){
     assert(renderer != NULL);
     struct next *n = calloc(1, sizeof(*n));
-//    struct vector pos = {.x = 2, .y = 2};
     n->renderer = renderer;
     n->viewport = viewport;
     n->next_pieces = calloc(NB_NEXT, sizeof(n->next_pieces));;
@@ -44,8 +43,8 @@ void next_draw(struct next* n)
         offset->x = 1;
         offset->y = i * 4;
         fab_draw(n->next_pieces[i_prime], n->renderer, offset);
+        free(offset);
     }
-
 }
 
 void next_insert(struct next* n, struct fabtrimino* fab)
@@ -57,7 +56,7 @@ void next_insert(struct next* n, struct fabtrimino* fab)
 struct fabtrimino* next_pull(struct next* n)
 {
     struct fabtrimino* next = n->next_pieces[n->index];
-    struct fabtrimino* new = fab_make(rand() % 7);
+    struct fabtrimino* new = fab_make(rand() % 7); // TODO: use a randomizer
     next_insert(n, new);
     return next;
 }

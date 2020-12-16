@@ -41,7 +41,6 @@ void fill_T_squares(struct square*** matrix)
     matrix[1][1] = make_square(T);
 }
 
-
 void fill_I_squares(struct square*** matrix)
 {
     matrix[0][1] = make_square(I);
@@ -49,7 +48,6 @@ void fill_I_squares(struct square*** matrix)
     matrix[2][1] = make_square(I);
     matrix[3][1] = make_square(I);
 }
-
 
 void fill_J_squares(struct square*** matrix)
 {
@@ -59,7 +57,6 @@ void fill_J_squares(struct square*** matrix)
     matrix[2][2] = make_square(J);
 }
 
-
 void fill_L_squares(struct square*** matrix)
 {
     matrix[0][2] = make_square(L);
@@ -67,7 +64,6 @@ void fill_L_squares(struct square*** matrix)
     matrix[2][2] = make_square(L);
     matrix[2][1] = make_square(L);
 }
-
 
 void fill_O_squares(struct square*** matrix)
 {
@@ -77,7 +73,6 @@ void fill_O_squares(struct square*** matrix)
     matrix[2][2] = make_square(O);
 }
 
-
 void fill_S_squares(struct square*** matrix)
 {
     matrix[1][1] = make_square(S);
@@ -85,7 +80,6 @@ void fill_S_squares(struct square*** matrix)
     matrix[0][2] = make_square(S);
     matrix[1][2] = make_square(S);
 }
-
 
 void fill_Z_squares(struct square*** matrix)
 {
@@ -148,7 +142,6 @@ void free_square(struct square* square)
 {
     free(square);
 }
-
 
 void fab_free(struct fabtrimino* fab)
 {
@@ -254,5 +247,4 @@ void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* off
             }
         }
     }
-
 }

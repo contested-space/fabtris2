@@ -1,11 +1,7 @@
 #pragma once
 #include<stddef.h>
 #include<SDL2/SDL.h>
-#include<common.h>
-struct grid; //TODO: move to its own thing
-//struct fabtrimino;
-struct square;
-
+#include "common.h"
 
 enum shape
 {
