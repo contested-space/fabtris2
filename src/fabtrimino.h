@@ -18,4 +18,4 @@ struct fabtrimino* fab_make(enum shape);
 
 /* void fab_draw(struct fabtrimino, SDL_Renderer*, SDL_Rect, vector pos); */
 
-void fab_draw(struct fabtrimino*, SDL_Renderer*);
+void fab_draw(struct fabtrimino*, SDL_Renderer*, struct vector*);

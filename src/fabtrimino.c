@@ -159,7 +159,7 @@ void draw_square(struct square* square, struct vector* position, SDL_Renderer* r
     SDL_RenderFillRect(renderer, &s);
 }
 
-void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer)
+void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* offset)
 {
     for (int i = 0; i < 4; i++)
     {
@@ -168,8 +168,8 @@ void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer)
             if (fab->matrix[i][j] != NULL)
             {
                 struct vector* position = calloc(1, sizeof(*position));
-                position->x = i;
-                position->y = j;
+                position->x = i + offset->x;
+                position->y = j + offset->y;
                 draw_square(fab->matrix[i][j], position, renderer);
             }
         }

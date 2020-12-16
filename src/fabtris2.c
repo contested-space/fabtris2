@@ -57,6 +57,10 @@ int main(int argc, char* args[])
             {
                 return 0;
             }
+            if (e.type == SDL_KEYDOWN)
+            {
+                next_pull(next_screen);
+            }
         }
         SDL_RenderSetViewport(renderer, &fullViewport);
         SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
