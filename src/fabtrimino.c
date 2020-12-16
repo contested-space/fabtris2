@@ -44,55 +44,55 @@ void fill_T_squares(struct square*** matrix)
 
 void fill_I_squares(struct square*** matrix)
 {
-    matrix[0][1] = make_square(T);
-    matrix[1][1] = make_square(T);
-    matrix[2][1] = make_square(T);
-    matrix[3][1] = make_square(T);
+    matrix[0][1] = make_square(I);
+    matrix[1][1] = make_square(I);
+    matrix[2][1] = make_square(I);
+    matrix[3][1] = make_square(I);
 }
 
 
 void fill_J_squares(struct square*** matrix)
 {
-    matrix[0][0] = make_square(T);
-    matrix[0][1] = make_square(T);
-    matrix[1][1] = make_square(T);
-    matrix[2][1] = make_square(T);
+    matrix[0][0] = make_square(J);
+    matrix[0][1] = make_square(J);
+    matrix[1][1] = make_square(J);
+    matrix[2][1] = make_square(J);
 }
 
 
 void fill_L_squares(struct square*** matrix)
 {
-    matrix[0][1] = make_square(T);
-    matrix[1][1] = make_square(T);
-    matrix[2][1] = make_square(T);
-    matrix[2][0] = make_square(T);
+    matrix[0][1] = make_square(L);
+    matrix[1][1] = make_square(L);
+    matrix[2][1] = make_square(L);
+    matrix[2][0] = make_square(L);
 }
 
 
 void fill_O_squares(struct square*** matrix)
 {
-    matrix[1][1] = make_square(T);
-    matrix[1][2] = make_square(T);
-    matrix[2][1] = make_square(T);
-    matrix[2][2] = make_square(T);
+    matrix[1][1] = make_square(O);
+    matrix[1][2] = make_square(O);
+    matrix[2][1] = make_square(O);
+    matrix[2][2] = make_square(O);
 }
 
 
 void fill_S_squares(struct square*** matrix)
 {
-    matrix[1][0] = make_square(T);
-    matrix[2][0] = make_square(T);
-    matrix[0][1] = make_square(T);
-    matrix[1][1] = make_square(T);
+    matrix[1][0] = make_square(S);
+    matrix[2][0] = make_square(S);
+    matrix[0][1] = make_square(S);
+    matrix[1][1] = make_square(S);
 }
 
 
 void fill_Z_squares(struct square*** matrix)
 {
-    matrix[0][0] = make_square(T);
-    matrix[1][0] = make_square(T);
-    matrix[1][1] = make_square(T);
-    matrix[2][1] = make_square(T);
+    matrix[0][0] = make_square(Z);
+    matrix[1][0] = make_square(Z);
+    matrix[1][1] = make_square(Z);
+    matrix[2][1] = make_square(Z);
 }
 
 void fill_shape_squares(struct square*** matrix, enum shape shape)
@@ -144,11 +144,66 @@ struct fabtrimino* fab_make(enum shape shape)
     return fab;
 }
 
+struct color {
+    Uint8 r;
+    Uint8 g;
+    Uint8 b;
+};
+
+struct color shape_color(enum shape shape)
+{
+    struct color col;
+    switch(shape) {
+    case T:
+        col.r = 0x80;
+        col.g = 0x00;
+        col.b = 0x80;
+        return col;
+    case I:
+        col.r = 0x00;
+        col.g = 0xFF;
+        col.b = 0xFF;
+        return col;
+    case L:
+        col.r = 0xFF;
+        col.g = 0xA5;
+        col.b = 0x00;
+        return col;
+    case J:
+        col.r = 0x00;
+        col.g = 0x00;
+        col.b = 0xFF;
+        return col;
+    case S:
+        col.r = 0x00;
+        col.g = 0x80;
+        col.b = 0x00;
+        return col;
+    case Z:
+        col.r = 0xFF;
+        col.g = 0x00;
+        col.b = 0x00;
+        return col;
+    case O:
+        col.r = 0xFF;
+        col.g = 0xFF;
+        col.b = 0x00;
+        return col;
+    default:
+        col.r = 0xAA;
+        col.g = 0xBB;
+        col.b = 0xCC;
+        return col;
+    }
+}
+
 void draw_square(struct square* square, struct vector* position, SDL_Renderer* renderer)
 {
 
     //TODO replace with a color based on square->shape
-    SDL_SetRenderDrawColor(renderer, 0x22, 0x33, 0x44, 0xFF);
+    struct color color = shape_color(square->shape);
+
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF);
 
     SDL_Rect s = {
         .x = position->x * GRID_SQUARE_LENGTH,
