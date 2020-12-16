@@ -35,10 +35,10 @@ struct square* make_square(enum shape shape)
 
 void fill_T_squares(struct square*** matrix)
 {
-    matrix[0][1] = make_square(T);
+    matrix[0][2] = make_square(T);
+    matrix[1][2] = make_square(T);
+    matrix[2][2] = make_square(T);
     matrix[1][1] = make_square(T);
-    matrix[2][1] = make_square(T);
-    matrix[1][0] = make_square(T);
 }
 
 
@@ -53,19 +53,19 @@ void fill_I_squares(struct square*** matrix)
 
 void fill_J_squares(struct square*** matrix)
 {
-    matrix[0][0] = make_square(J);
     matrix[0][1] = make_square(J);
-    matrix[1][1] = make_square(J);
-    matrix[2][1] = make_square(J);
+    matrix[0][2] = make_square(J);
+    matrix[1][2] = make_square(J);
+    matrix[2][2] = make_square(J);
 }
 
 
 void fill_L_squares(struct square*** matrix)
 {
-    matrix[0][1] = make_square(L);
-    matrix[1][1] = make_square(L);
+    matrix[0][2] = make_square(L);
+    matrix[1][2] = make_square(L);
+    matrix[2][2] = make_square(L);
     matrix[2][1] = make_square(L);
-    matrix[2][0] = make_square(L);
 }
 
 
@@ -80,19 +80,19 @@ void fill_O_squares(struct square*** matrix)
 
 void fill_S_squares(struct square*** matrix)
 {
-    matrix[1][0] = make_square(S);
-    matrix[2][0] = make_square(S);
-    matrix[0][1] = make_square(S);
     matrix[1][1] = make_square(S);
+    matrix[2][1] = make_square(S);
+    matrix[0][2] = make_square(S);
+    matrix[1][2] = make_square(S);
 }
 
 
 void fill_Z_squares(struct square*** matrix)
 {
-    matrix[0][0] = make_square(Z);
-    matrix[1][0] = make_square(Z);
+    matrix[0][1] = make_square(Z);
     matrix[1][1] = make_square(Z);
-    matrix[2][1] = make_square(Z);
+    matrix[1][2] = make_square(Z);
+    matrix[2][2] = make_square(Z);
 }
 
 void fill_shape_squares(struct square*** matrix, enum shape shape)

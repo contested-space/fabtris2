@@ -42,7 +42,7 @@ void next_draw(struct next* n)
         size_t i_prime = (i + n->index) % NB_NEXT;
         struct vector* offset = calloc(1, sizeof(*offset));
         offset->x = 1;
-        offset->y = i * 4 + 1;
+        offset->y = i * 4;
         fab_draw(n->next_pieces[i_prime], n->renderer, offset);
     }
 
