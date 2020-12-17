@@ -1,4 +1,3 @@
-#include<stdlib.h>
 #include "next.h"
 #include "fabtrimino.h"
 
@@ -26,15 +25,15 @@ struct next* next_make(SDL_Renderer* renderer, SDL_Rect* viewport){
 
 void next_draw(struct next* n)
 {
-    SDL_RenderSetViewport(n->renderer, n->viewport);
-    SDL_SetRenderDrawColor(n->renderer, 0x00, 0x00, 0x00, 0xFF);
+    sdl_err(SDL_RenderSetViewport(n->renderer, n->viewport));
+    sdl_err(SDL_SetRenderDrawColor(n->renderer, 0x00, 0x00, 0x00, 0xFF));
     SDL_Rect background = {
         .x = 0,
         .y = 0,
         .w = n->viewport->w,
         .h = n->viewport->h
     };
-    SDL_RenderFillRect(n->renderer, &background);
+    sdl_err(SDL_RenderFillRect(n->renderer, &background));
 
     for (size_t i = 0; i < NB_NEXT; i++)
     {

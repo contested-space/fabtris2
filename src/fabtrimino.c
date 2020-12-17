@@ -221,7 +221,7 @@ void draw_square(struct square* square, struct vector* position, SDL_Renderer* r
 {
     struct color color = shape_color(square->shape);
 
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF);
+    sdl_err(SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF));
 
     SDL_Rect s = {
         .x = position->x * GRID_SQUARE_LENGTH,
@@ -229,7 +229,7 @@ void draw_square(struct square* square, struct vector* position, SDL_Renderer* r
         .w = GRID_SQUARE_LENGTH,
         .h = GRID_SQUARE_LENGTH
     };
-    SDL_RenderFillRect(renderer, &s);
+    sdl_err(SDL_RenderFillRect(renderer, &s));
 }
 
 void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* offset)

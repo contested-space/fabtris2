@@ -1,6 +1,6 @@
-#include<SDL2/SDL.h>
-#include<SDL2/SDL_image.h>
-#include<stddef.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <stddef.h>
 
 #include "common.h"
 #include "fabtrimino.h"
@@ -8,21 +8,21 @@
 
 SDL_Window* createWindow(const char* title)
 {
-    SDL_Window * window = SDL_CreateWindow(title,
-                                           SDL_WINDOWPOS_UNDEFINED,
-                                           SDL_WINDOWPOS_UNDEFINED,
-                                           SCREEN_WIDTH,
-                                           SCREEN_HEIGHT,
-                                           SDL_WINDOW_SHOWN);
+    SDL_Window * window = sdl_ptr(SDL_CreateWindow(title,
+                                                   SDL_WINDOWPOS_UNDEFINED,
+                                                   SDL_WINDOWPOS_UNDEFINED,
+                                                   SCREEN_WIDTH,
+                                                   SCREEN_HEIGHT,
+                                                   SDL_WINDOW_SHOWN));
     assert(window != NULL);
     return window;
 }
 
 SDL_Renderer* createRenderer(SDL_Window* window)
 {
-    SDL_Renderer* renderer = SDL_CreateRenderer(window,
-                                                -1,
-                                                SDL_RENDERER_ACCELERATED);
+    SDL_Renderer* renderer = sdl_ptr(SDL_CreateRenderer(window,
+                                                        -1,
+                                                        SDL_RENDERER_ACCELERATED));
     assert(renderer != NULL);
     return renderer;
 }
@@ -32,8 +32,8 @@ int main(int argc, char* argv[])
 
     (void) argc, (void) argv;
 
-    SDL_Window* gameWindow = createWindow("Fabtris 2");
-    SDL_Renderer* renderer = createRenderer(gameWindow);
+    SDL_Window* gameWindow = sdl_ptr(createWindow("Fabtris 2"));
+    SDL_Renderer* renderer = sdl_ptr(createRenderer(gameWindow));
 
     SDL_Event e;
 
@@ -53,9 +53,9 @@ int main(int argc, char* argv[])
         .h = SCREEN_HEIGHT
     };
 
-    while (1)
+    while (true)
     {
-        while(SDL_PollEvent(&e) != 0)
+        while(sdl_err(SDL_PollEvent(&e)) != 0)
         {
             if (e.type == SDL_QUIT)
             {
@@ -67,9 +67,9 @@ int main(int argc, char* argv[])
                 fab_free(fab);
             }
         }
-        SDL_RenderSetViewport(renderer, &fullViewport);
-        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        SDL_RenderClear(renderer);
+        sdl_err(SDL_RenderSetViewport(renderer, &fullViewport));
+        sdl_err(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF));
+        sdl_err(SDL_RenderClear(renderer));
 
         next_draw(next_screen);
 

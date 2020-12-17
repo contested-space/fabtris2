@@ -1,5 +1,32 @@
 #pragma once
-#include<assert.h>
+#include <assert.h>
+#include <stdbool.h>
+// These sweet macros have been stolen from Remi Attab
+// https://github.com/RAttab
+#define sdl_fail(p)                                                     \
+    do {                                                                \
+        fprintf(stderr, "sdl-fail<%s:%u> %s: %s\n",                     \
+                __FILE__, __LINE__, #p, SDL_GetError());                \
+        abort();                                                        \
+    } while(false)
+
+
+#define sdl_err(p)                                                      \
+    ({                                                                  \
+        typeof(p) ret = (p);                                            \
+        if (unlikely(ret < 0)) sdl_fail(p);                             \
+        ret;                                                            \
+    })
+
+#define sdl_ptr(p)                                                      \
+    ({                                                                  \
+        typeof(p) ret = (p);                                            \
+        if (unlikely(!ret)) sdl_fail(p);                                \
+        ret;                                                            \
+    })
+
+#define likely(x)    __builtin_expect(x, 1)
+#define unlikely(x)  __builtin_expect(x, 0)
 
 struct vector {
     int x;
