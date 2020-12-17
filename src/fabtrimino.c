@@ -12,18 +12,6 @@ struct fabtrimino
     struct vector* pos;
 };
 
-
-void nullify_squares_matrix(struct square* mat[4][4])
-{
-    for (size_t i = 0; i < 4; i++)
-    {
-        for (size_t j = 0; j < 4; j++)
-        {
-            mat[i][j] = NULL;
-        }
-    }
-}
-
 struct square* make_square(enum shape shape)
 {
     struct square* sqr = calloc(1, sizeof(*sqr));
@@ -120,9 +108,7 @@ void fill_shape_squares(struct square* matrix[4][4], enum shape shape)
 struct fabtrimino* fab_make(enum shape shape)
 {
     struct fabtrimino* fab = calloc(1, sizeof(*fab));
-
-    nullify_squares_matrix(fab->matrix);
-
+    memset(fab->matrix, 0, 4*4*sizeof(fab->matrix[0][0]));
     fill_shape_squares(fab->matrix, shape);
 
     fab->shape = shape;
