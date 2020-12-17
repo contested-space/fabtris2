@@ -9,7 +9,7 @@ struct fabtrimino
 {
     enum shape shape;
     struct square* matrix[4][4];
-    struct vector* pos;
+    struct vector pos;
 };
 
 struct square* make_square(enum shape shape)
@@ -112,7 +112,6 @@ struct fabtrimino* fab_make(enum shape shape)
     fill_shape_squares(fab->matrix, shape);
 
     fab->shape = shape;
-    fab->pos = NULL;
 
     return fab;
 }
@@ -133,10 +132,6 @@ void fab_free(struct fabtrimino* fab)
                 free_square(fab->matrix[i][j]);
             }
         }
-    }
-    if (fab->pos != NULL)
-    {
-        free(fab->pos);
     }
     free(fab);
 }
@@ -217,10 +212,10 @@ void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* off
         {
             if (fab->matrix[i][j] != NULL)
             {
-                struct vector* position = calloc(1, sizeof(*position));
-                position->x = i + offset->x;
-                position->y = j + offset->y;
-                draw_square(fab->matrix[i][j], position, renderer);
+                struct vector position = {0};
+                position.x = i + offset->x;
+                position.y = j + offset->y;
+                draw_square(fab->matrix[i][j], &position, renderer);
             }
         }
     }

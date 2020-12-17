@@ -37,14 +37,16 @@ int main(int argc, char* argv[])
 
     SDL_Event e;
 
-    SDL_Rect* nextViewport = calloc(1, sizeof(*nextViewport));
-    size_t width = GRID_SQUARE_LENGTH * 6; //leaves 1 square on each size
-    nextViewport->x = SCREEN_WIDTH - width;
-    nextViewport->y = 0;
-    nextViewport->w = width;
-    nextViewport->h = GRID_SQUARE_LENGTH * 20; //allows for 5 pieces
 
-    struct next* next_screen = next_make(renderer, nextViewport);
+    size_t width = GRID_SQUARE_LENGTH * 6; //leaves 1 square on each size
+    SDL_Rect nextViewport = {
+        .x = SCREEN_WIDTH - width,
+        .y = 0,
+        .w = width,
+        .h = GRID_SQUARE_LENGTH * 20 //allows for 5 pieces
+    };
+
+    struct next* next_screen = next_make(renderer, &nextViewport);
 
     SDL_Rect fullViewport = {
         .x = 0,

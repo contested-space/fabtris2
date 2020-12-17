@@ -1,12 +1,12 @@
 #include "next.h"
 #include "fabtrimino.h"
 
-const size_t NB_NEXT = 5;
+#define NB_NEXT 5
 
 struct next {
     SDL_Renderer* renderer;
     SDL_Rect* viewport;
-    struct fabtrimino** next_pieces;
+    struct fabtrimino* next_pieces[NB_NEXT];
     size_t index;
 };
 
@@ -15,7 +15,6 @@ struct next* next_make(SDL_Renderer* renderer, SDL_Rect* viewport){
     struct next *n = calloc(1, sizeof(*n));
     n->renderer = renderer;
     n->viewport = viewport;
-    n->next_pieces = calloc(NB_NEXT, sizeof(n->next_pieces));;
     for (size_t i = 0; i < NB_NEXT; i++)
     {
         n->next_pieces[i] = fab_make(i); //TODO: replace by a randomizer
@@ -38,11 +37,11 @@ void next_draw(struct next* n)
     for (size_t i = 0; i < NB_NEXT; i++)
     {
         size_t i_prime = (i + n->index) % NB_NEXT;
-        struct vector* offset = calloc(1, sizeof(*offset));
-        offset->x = 1;
-        offset->y = i * 4;
-        fab_draw(n->next_pieces[i_prime], n->renderer, offset);
-        free(offset);
+        struct vector offset = {
+            .x = 1,
+            .y = i * 4
+        };
+        fab_draw(n->next_pieces[i_prime], n->renderer, &offset);
     }
 }
 
