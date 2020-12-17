@@ -8,18 +8,16 @@ struct square
 struct fabtrimino
 {
     enum shape shape;
-    struct square*** matrix;
+    struct square* matrix[4][4];
     struct vector* pos;
 };
 
 
-void nullify_squares_matrix(struct square*** mat, size_t size)
-// TODO: catch and print error when size > matrix_size
-// (maybe create struct for matrix with size)
+void nullify_squares_matrix(struct square* mat[4][4])
 {
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < 4; i++)
     {
-        for (size_t j = 0; j < size; j++)
+        for (size_t j = 0; j < 4; j++)
         {
             mat[i][j] = NULL;
         }
@@ -33,7 +31,7 @@ struct square* make_square(enum shape shape)
     return sqr;
 }
 
-void fill_T_squares(struct square*** matrix)
+void fill_T_squares(struct square* matrix[4][4])
 {
     matrix[0][2] = make_square(T);
     matrix[1][2] = make_square(T);
@@ -41,7 +39,7 @@ void fill_T_squares(struct square*** matrix)
     matrix[1][1] = make_square(T);
 }
 
-void fill_I_squares(struct square*** matrix)
+void fill_I_squares(struct square* matrix[4][4])
 {
     matrix[0][1] = make_square(I);
     matrix[1][1] = make_square(I);
@@ -49,7 +47,7 @@ void fill_I_squares(struct square*** matrix)
     matrix[3][1] = make_square(I);
 }
 
-void fill_J_squares(struct square*** matrix)
+void fill_J_squares(struct square* matrix[4][4])
 {
     matrix[0][1] = make_square(J);
     matrix[0][2] = make_square(J);
@@ -57,7 +55,7 @@ void fill_J_squares(struct square*** matrix)
     matrix[2][2] = make_square(J);
 }
 
-void fill_L_squares(struct square*** matrix)
+void fill_L_squares(struct square* matrix[4][4])
 {
     matrix[0][2] = make_square(L);
     matrix[1][2] = make_square(L);
@@ -65,7 +63,7 @@ void fill_L_squares(struct square*** matrix)
     matrix[2][1] = make_square(L);
 }
 
-void fill_O_squares(struct square*** matrix)
+void fill_O_squares(struct square* matrix[4][4])
 {
     matrix[1][1] = make_square(O);
     matrix[1][2] = make_square(O);
@@ -73,7 +71,7 @@ void fill_O_squares(struct square*** matrix)
     matrix[2][2] = make_square(O);
 }
 
-void fill_S_squares(struct square*** matrix)
+void fill_S_squares(struct square* matrix[4][4])
 {
     matrix[1][1] = make_square(S);
     matrix[2][1] = make_square(S);
@@ -81,7 +79,7 @@ void fill_S_squares(struct square*** matrix)
     matrix[1][2] = make_square(S);
 }
 
-void fill_Z_squares(struct square*** matrix)
+void fill_Z_squares(struct square* matrix[4][4])
 {
     matrix[0][1] = make_square(Z);
     matrix[1][1] = make_square(Z);
@@ -89,7 +87,7 @@ void fill_Z_squares(struct square*** matrix)
     matrix[2][2] = make_square(Z);
 }
 
-void fill_shape_squares(struct square*** matrix, enum shape shape)
+void fill_shape_squares(struct square* matrix[4][4], enum shape shape)
 {
     switch(shape){
     case T:
@@ -123,12 +121,7 @@ struct fabtrimino* fab_make(enum shape shape)
 {
     struct fabtrimino* fab = calloc(1, sizeof(*fab));
 
-    fab->matrix = calloc(4, sizeof(struct square**));
-    for (size_t i = 0; i<4; i++)
-    {
-        fab->matrix[i] = calloc(4, sizeof(struct square*));
-    }
-    nullify_squares_matrix(fab->matrix, 4);
+    nullify_squares_matrix(fab->matrix);
 
     fill_shape_squares(fab->matrix, shape);
 
@@ -154,9 +147,7 @@ void fab_free(struct fabtrimino* fab)
                 free_square(fab->matrix[i][j]);
             }
         }
-        free(fab->matrix[i]);
     }
-    free(fab->matrix);
     if (fab->pos != NULL)
     {
         free(fab->pos);
