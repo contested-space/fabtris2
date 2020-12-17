@@ -6,6 +6,7 @@ struct grid
     SDL_Rect* viewport;
     struct fabtrimino* active_piece;
     struct square* matrix[GRID_WIDTH][GRID_HEIGHT];
+    struct vector active_piece_pos;
 };
 
 struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport)
@@ -23,6 +24,16 @@ struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport)
     return grid;
 }
 
+void grid_receive(struct grid* grid, struct fabtrimino* fab)
+{
+    if (grid->active_piece != NULL)
+    {
+        fab_free(grid->active_piece);
+    }
+    grid->active_piece = fab;
+    grid->active_piece_pos = (struct vector) {.x = 3, .y = 0}; // TODO: adapt to shapes
+}
+
 void grid_draw(struct grid* g)
 {
     sdl_err(SDL_RenderSetViewport(g->renderer, g->viewport));
@@ -34,4 +45,5 @@ void grid_draw(struct grid* g)
         .h = g->viewport->h
     };
     sdl_err(SDL_RenderFillRect(g->renderer, &background));
+    fab_draw(g->active_piece, g->renderer, &g->active_piece_pos);
 }

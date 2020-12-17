@@ -60,6 +60,9 @@ int main(int argc, char* argv[])
 
     struct grid* grid_screen = grid_make(renderer, &gridViewport);
 
+    struct fabtrimino* first_piece = next_pull(next_screen);
+    grid_receive(grid_screen, first_piece);
+
 
     SDL_Rect fullViewport = {
         .x = 0,
@@ -79,7 +82,7 @@ int main(int argc, char* argv[])
             if (e.type == SDL_KEYDOWN)
             {
                 struct fabtrimino* fab = next_pull(next_screen);
-                fab_free(fab);
+                grid_receive(grid_screen, fab);
             }
         }
         sdl_err(SDL_RenderSetViewport(renderer, &fullViewport));

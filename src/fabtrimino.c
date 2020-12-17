@@ -113,6 +113,8 @@ struct fabtrimino* fab_make(enum shape shape)
 
     fab->shape = shape;
 
+    fab->pos = (struct vector) {.x = 0, .y = 0};
+
     return fab;
 }
 
