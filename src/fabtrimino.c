@@ -147,44 +147,28 @@ struct color shape_color(enum shape shape)
     struct color col;
     switch(shape) {
     case T:
-        col.r = 0x80;
-        col.g = 0x00;
-        col.b = 0x80;
+        col = (struct color) { .r = 0x80, .g = 0x00, .b = 0x80 };
         return col;
     case I:
-        col.r = 0x00;
-        col.g = 0xFF;
-        col.b = 0xFF;
+        col = (struct color) { .r = 0x00, .g = 0xFF, .b = 0xFF };
         return col;
     case L:
-        col.r = 0xFF;
-        col.g = 0xA5;
-        col.b = 0x00;
+        col = (struct color) { .r = 0xFF, .g = 0xA5, .b = 0x00 };
         return col;
     case J:
-        col.r = 0x00;
-        col.g = 0x00;
-        col.b = 0xFF;
+        col = (struct color) { .r = 0x00, .g = 0x00, .b = 0xFF };
         return col;
     case S:
-        col.r = 0x00;
-        col.g = 0x80;
-        col.b = 0x00;
+        col = (struct color) { .r = 0x00, .g = 0x80, .b = 0x00 };
         return col;
     case Z:
-        col.r = 0xFF;
-        col.g = 0x00;
-        col.b = 0x00;
+        col = (struct color) { .r = 0xFF, .g = 0x00, .b = 0x00 };
         return col;
     case O:
-        col.r = 0xFF;
-        col.g = 0xFF;
-        col.b = 0x00;
+        col = (struct color) { .r = 0xFF, .g = 0xFF, .b = 0x00 };
         return col;
     default:
-        col.r = 0xAA;
-        col.g = 0xBB;
-        col.b = 0xCC;
+        col = (struct color) { .r = 0xFF, .g = 0xAA, .b = 0xBB };
         return col;
     }
 }
