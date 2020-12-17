@@ -5,6 +5,7 @@
 #include "common.h"
 #include "fabtrimino.h"
 #include "next.h"
+#include "grid.h"
 
 SDL_Window* createWindow(const char* title)
 {
@@ -38,15 +39,27 @@ int main(int argc, char* argv[])
     SDL_Event e;
 
 
-    size_t width = GRID_SQUARE_LENGTH * 6; //leaves 1 square on each size
+    size_t viewport_width = GRID_SQUARE_LENGTH * 6; //leaves 1 square on each size
     SDL_Rect nextViewport = {
-        .x = SCREEN_WIDTH - width,
+        .x = SCREEN_WIDTH - viewport_width,
         .y = 0,
-        .w = width,
+        .w = viewport_width,
         .h = GRID_SQUARE_LENGTH * 20 //allows for 5 pieces
     };
 
     struct next* next_screen = next_make(renderer, &nextViewport);
+
+
+
+    SDL_Rect gridViewport = {
+        .x = SCREEN_WIDTH/4, // This is sketchy. Must be fixed at some point
+        .y = 0,
+        .w = GRID_WIDTH * GRID_SQUARE_LENGTH,
+        .h = GRID_VISIBLE_HEIGHT * GRID_SQUARE_LENGTH
+    };
+
+    struct grid* grid_screen = grid_make(renderer, &gridViewport);
+
 
     SDL_Rect fullViewport = {
         .x = 0,
@@ -74,6 +87,7 @@ int main(int argc, char* argv[])
         sdl_err(SDL_RenderClear(renderer));
 
         next_draw(next_screen);
+        grid_draw(grid_screen);
 
         SDL_RenderPresent(renderer);
     }

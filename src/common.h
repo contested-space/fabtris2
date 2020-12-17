@@ -1,6 +1,8 @@
 #pragma once
 #include <assert.h>
 #include <stdbool.h>
+#include <SDL2/SDL.h>
+
 // These sweet macros have been stolen from Remi Attab
 // https://github.com/RAttab
 #define sdl_fail(p)                                                     \

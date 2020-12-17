@@ -10,4 +10,4 @@ CFLAGS="$CFLAGS -Wno-implicit-fallthrough"
 
 CFLAGS="$CFLAGS $(sdl2-config --cflags)"
 
-gcc src/fabtris2.c src/fabtrimino.c src/next.c $CFLAGS -I./src -lSDL2 -lSDL2_image -g -std=gnu11 -o fabtris2
+gcc src/fabtris2.c src/fabtrimino.c src/next.c src/grid.c $CFLAGS -I./src -lSDL2 -lSDL2_image -g -std=gnu11 -o fabtris2
