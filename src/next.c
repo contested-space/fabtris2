@@ -17,7 +17,7 @@ struct next* next_make(SDL_Renderer* renderer, SDL_Rect* viewport){
     n->renderer = renderer;
     n->viewport = viewport;
     n->next_pieces = calloc(NB_NEXT, sizeof(n->next_pieces));;
-    for (int i = 0; i < NB_NEXT; i++)
+    for (size_t i = 0; i < NB_NEXT; i++)
     {
         n->next_pieces[i] = fab_make(i); //TODO: replace by a randomizer
     }
@@ -36,7 +36,7 @@ void next_draw(struct next* n)
     };
     SDL_RenderFillRect(n->renderer, &background);
 
-    for (int i = 0; i < NB_NEXT; i++)
+    for (size_t i = 0; i < NB_NEXT; i++)
     {
         size_t i_prime = (i + n->index) % NB_NEXT;
         struct vector* offset = calloc(1, sizeof(*offset));

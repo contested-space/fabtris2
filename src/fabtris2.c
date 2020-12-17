@@ -27,15 +27,18 @@ SDL_Renderer* createRenderer(SDL_Window* window)
     return renderer;
 }
 
-int main(int argc, char* args[])
+int main(int argc, char* argv[])
 {
+
+    (void) argc, (void) argv;
+
     SDL_Window* gameWindow = createWindow("Fabtris 2");
     SDL_Renderer* renderer = createRenderer(gameWindow);
 
     SDL_Event e;
 
     SDL_Rect* nextViewport = calloc(1, sizeof(*nextViewport));
-    int width = GRID_SQUARE_LENGTH * 6; //leaves 1 square on each size
+    size_t width = GRID_SQUARE_LENGTH * 6; //leaves 1 square on each size
     nextViewport->x = SCREEN_WIDTH - width;
     nextViewport->y = 0;
     nextViewport->w = width;

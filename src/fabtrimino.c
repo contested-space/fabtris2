@@ -17,9 +17,9 @@ void nullify_squares_matrix(struct square*** mat, size_t size)
 // TODO: catch and print error when size > matrix_size
 // (maybe create struct for matrix with size)
 {
-    for (int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
     {
-        for (int j = 0; j < size; j++)
+        for (size_t j = 0; j < size; j++)
         {
             mat[i][j] = NULL;
         }
@@ -124,7 +124,7 @@ struct fabtrimino* fab_make(enum shape shape)
     struct fabtrimino* fab = calloc(1, sizeof(*fab));
 
     fab->matrix = calloc(4, sizeof(struct square**));
-    for (int i = 0; i<4; i++)
+    for (size_t i = 0; i<4; i++)
     {
         fab->matrix[i] = calloc(4, sizeof(struct square*));
     }
@@ -145,9 +145,9 @@ void free_square(struct square* square)
 
 void fab_free(struct fabtrimino* fab)
 {
-    for (int i = 0; i < 4; i++) // TODO: change the 4 to matrix.size once the matrix is a struct
+    for (size_t i = 0; i < 4; i++) // TODO: change the 4 to matrix.size once the matrix is a struct
     {
-        for (int j = 0; j < 4; j++)
+        for (size_t j = 0; j < 4; j++)
         {
             if (fab->matrix[i][j] != NULL)
             {
@@ -234,9 +234,9 @@ void draw_square(struct square* square, struct vector* position, SDL_Renderer* r
 
 void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* offset)
 {
-    for (int i = 0; i < 4; i++)
+    for (size_t i = 0; i < 4; i++)
     {
-        for (int j = 0; j < 4; j++)
+        for (size_t j = 0; j < 4; j++)
         {
             if (fab->matrix[i][j] != NULL)
             {
