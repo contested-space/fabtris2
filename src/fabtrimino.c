@@ -21,10 +21,10 @@ struct square* make_square(enum shape shape)
 
 void fill_T_squares(struct square* matrix[4][4])
 {
-    matrix[0][2] = make_square(T);
-    matrix[1][2] = make_square(T);
-    matrix[2][2] = make_square(T);
+    matrix[0][1] = make_square(T);
     matrix[1][1] = make_square(T);
+    matrix[2][1] = make_square(T);
+    matrix[1][0] = make_square(T);
 }
 
 void fill_I_squares(struct square* matrix[4][4])
@@ -37,18 +37,18 @@ void fill_I_squares(struct square* matrix[4][4])
 
 void fill_J_squares(struct square* matrix[4][4])
 {
+    matrix[0][0] = make_square(J);
     matrix[0][1] = make_square(J);
-    matrix[0][2] = make_square(J);
-    matrix[1][2] = make_square(J);
-    matrix[2][2] = make_square(J);
+    matrix[1][1] = make_square(J);
+    matrix[2][1] = make_square(J);
 }
 
 void fill_L_squares(struct square* matrix[4][4])
 {
-    matrix[0][2] = make_square(L);
-    matrix[1][2] = make_square(L);
-    matrix[2][2] = make_square(L);
+    matrix[0][1] = make_square(L);
+    matrix[1][1] = make_square(L);
     matrix[2][1] = make_square(L);
+    matrix[2][0] = make_square(L);
 }
 
 void fill_O_squares(struct square* matrix[4][4])
@@ -61,18 +61,18 @@ void fill_O_squares(struct square* matrix[4][4])
 
 void fill_S_squares(struct square* matrix[4][4])
 {
+    matrix[1][0] = make_square(S);
+    matrix[2][0] = make_square(S);
+    matrix[0][1] = make_square(S);
     matrix[1][1] = make_square(S);
-    matrix[2][1] = make_square(S);
-    matrix[0][2] = make_square(S);
-    matrix[1][2] = make_square(S);
 }
 
 void fill_Z_squares(struct square* matrix[4][4])
 {
-    matrix[0][1] = make_square(Z);
+    matrix[0][0] = make_square(Z);
+    matrix[1][0] = make_square(Z);
     matrix[1][1] = make_square(Z);
-    matrix[1][2] = make_square(Z);
-    matrix[2][2] = make_square(Z);
+    matrix[2][1] = make_square(Z);
 }
 
 void fill_shape_squares(struct square* matrix[4][4], enum shape shape)
@@ -204,5 +204,69 @@ void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* off
                 draw_square(fab->matrix[i][j], &position, renderer);
             }
         }
+    }
+}
+
+
+// TODO: clean rotation using a single temp square
+void rotate_clockwise(struct square* matrix[4][4], size_t size)
+{
+    struct square* temp[4][4];
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            temp[i][j] = matrix[i][j];
+        }
+    }
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size; j++)
+        {
+            matrix[i][j] = temp[j][size-i-1];
+        }
+    }
+}
+
+// TODO: not that
+void rotate_counter_clockwise(struct square* matrix[4][4], size_t size)
+{
+  rotate_clockwise(matrix, size);
+  rotate_clockwise(matrix, size);
+  rotate_clockwise(matrix, size);
+}
+
+size_t size_of_matrix(enum shape shape)
+{
+    switch(shape) {
+    case T:
+    case S:
+    case Z:
+    case L:
+    case J:
+        return 3;
+    case I:
+        return 4;
+    case O:
+    default:
+        return 0;
+    }
+}
+
+void fab_rotate_clockwise(struct fabtrimino* fab)
+{
+    size_t size = size_of_matrix(fab->shape);
+    if (size != 0)
+    {
+        rotate_clockwise(fab->matrix, size);
+    }
+}
+
+void fab_rotate_counter_clockwise(struct fabtrimino* fab)
+{
+    size_t size = size_of_matrix(fab->shape);
+    if (size != 0)
+    {
+        rotate_counter_clockwise(fab->matrix, size);
     }
 }

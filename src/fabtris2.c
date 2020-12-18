@@ -81,8 +81,19 @@ int main(int argc, char* argv[])
             }
             if (e.type == SDL_KEYDOWN)
             {
-                struct fabtrimino* fab = next_pull(next_screen);
-                grid_receive(grid_screen, fab);
+                switch(e.key.keysym.sym) {
+                case SDLK_x:
+                    grid_rotate_piece_clockwise(grid_screen);
+                    break;
+                case SDLK_z:
+                    grid_rotate_piece_counter_clockwise(grid_screen);
+                    break;
+                default:
+                {
+                    struct fabtrimino* fab = next_pull(next_screen);
+                    grid_receive(grid_screen, fab);
+                }
+                }
             }
         }
         sdl_err(SDL_RenderSetViewport(renderer, &fullViewport));

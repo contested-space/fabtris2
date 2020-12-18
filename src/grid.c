@@ -47,3 +47,13 @@ void grid_draw(struct grid* g)
     sdl_err(SDL_RenderFillRect(g->renderer, &background));
     fab_draw(g->active_piece, g->renderer, &g->active_piece_pos);
 }
+
+void grid_rotate_piece_clockwise(struct grid* grid)
+{
+    fab_rotate_clockwise(grid->active_piece);
+}
+
+void grid_rotate_piece_counter_clockwise(struct grid* grid)
+{
+    fab_rotate_counter_clockwise(grid->active_piece);
+}

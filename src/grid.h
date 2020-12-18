@@ -13,3 +13,7 @@ struct grid* grid_make(SDL_Renderer*, SDL_Rect*);
 void grid_receive(struct grid*, struct fabtrimino*);
 
 void grid_draw(struct grid*);
+
+void grid_rotate_piece_clockwise(struct grid*);
+
+void grid_rotate_piece_counter_clockwise(struct grid*);
