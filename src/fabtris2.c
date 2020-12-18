@@ -88,6 +88,12 @@ int main(int argc, char* argv[])
                 case SDLK_z:
                     grid_rotate_piece_counter_clockwise(grid_screen);
                     break;
+                case SDLK_LEFT:
+                    grid_move_piece_left(grid_screen);
+                    break;
+                case SDLK_RIGHT:
+                    grid_move_piece_right(grid_screen);
+                    break;
                 default:
                 {
                     struct fabtrimino* fab = next_pull(next_screen);

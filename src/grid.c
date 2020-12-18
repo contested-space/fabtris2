@@ -57,3 +57,13 @@ void grid_rotate_piece_counter_clockwise(struct grid* grid)
 {
     fab_rotate_counter_clockwise(grid->active_piece);
 }
+
+void grid_move_piece_left(struct grid* grid)
+{
+    grid->active_piece_pos.x-=1;
+}
+
+void grid_move_piece_right(struct grid* grid)
+{
+    grid->active_piece_pos.x+=1;
+}
