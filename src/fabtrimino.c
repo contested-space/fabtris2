@@ -5,13 +5,6 @@ struct square
     enum shape shape;
 };
 
-struct fabtrimino
-{
-    enum shape shape;
-    struct square* matrix[4][4];
-    struct vector pos;
-};
-
 struct square* make_square(enum shape shape)
 {
     struct square* sqr = calloc(1, sizeof(*sqr));

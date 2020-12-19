@@ -1,11 +1,16 @@
 #pragma once
-#include<stddef.h>
-#include<SDL2/SDL.h>
 #include "common.h"
 
 enum shape
 {
     I, J, L, O, S, T, Z
+};
+
+struct fabtrimino
+{
+    enum shape shape;
+    struct square* matrix[4][4];
+    struct vector pos;
 };
 
 struct fabtrimino* fab_make(enum shape);

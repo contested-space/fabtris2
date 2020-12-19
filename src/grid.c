@@ -58,12 +58,58 @@ void grid_rotate_piece_counter_clockwise(struct grid* grid)
     fab_rotate_counter_clockwise(grid->active_piece);
 }
 
+bool check_left(struct grid* grid)
+{
+    struct vector offset = grid->active_piece_pos;
+    struct fabtrimino* fab = grid->active_piece;
+    for (size_t i = 0; i < 4; i++)
+    {
+        for (size_t j = 0; j < 4; j++)
+        {
+            if (fab->matrix[i][j] != NULL)
+            {
+                if ((int8_t) i + offset.x - 1 < 0)
+                {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool check_right(struct grid* grid)
+{
+    struct vector offset = grid->active_piece_pos;
+    struct fabtrimino* fab = grid->active_piece;
+    for (size_t i = 0; i < 4; i++)
+    {
+        for (size_t j = 0; j < 4; j++)
+        {
+            if (fab->matrix[i][j] != NULL)
+            {
+                if ((int8_t) i + offset.x + 1 >= 10)
+                {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 void grid_move_piece_left(struct grid* grid)
 {
-    grid->active_piece_pos.x-=1;
+    if (check_left(grid))
+        {
+            grid->active_piece_pos.x-=1;
+        }
 }
 
 void grid_move_piece_right(struct grid* grid)
 {
-    grid->active_piece_pos.x+=1;
+        if (check_right(grid))
+        {
+            grid->active_piece_pos.x+=1;
+        }
 }
