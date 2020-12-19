@@ -1,10 +1,5 @@
 #include "fabtrimino.h"
 
-struct square
-{
-    enum shape shape;
-};
-
 struct square* make_square(enum shape shape)
 {
     struct square* sqr = calloc(1, sizeof(*sqr));

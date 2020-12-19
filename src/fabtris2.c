@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
         .h = GRID_VISIBLE_HEIGHT * GRID_SQUARE_LENGTH
     };
 
-    struct grid* grid_screen = grid_make(renderer, &gridViewport);
+    struct grid* grid_screen = grid_make(renderer, &gridViewport, next_screen);
 
     struct fabtrimino* first_piece = next_pull(next_screen);
     grid_receive(grid_screen, first_piece);
@@ -97,21 +97,18 @@ int main(int argc, char* argv[])
                 case SDLK_DOWN:
                     grid_piece_fall(grid_screen);
                     break;
-                default:
-                {
-                    struct fabtrimino* fab = next_pull(next_screen);
-                    grid_receive(grid_screen, fab);
-                }
+                case SDLK_SPACE:
+                    grid_lock_piece(grid_screen);
+                    break;
+                default:;
                 }
             }
         }
         sdl_err(SDL_RenderSetViewport(renderer, &fullViewport));
         sdl_err(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF));
         sdl_err(SDL_RenderClear(renderer));
-
         next_draw(next_screen);
         grid_draw(grid_screen);
-
         SDL_RenderPresent(renderer);
     }
 }

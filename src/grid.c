@@ -1,4 +1,5 @@
 #include "grid.h"
+#include "fabtrimino.h"
 
 struct grid
 {
@@ -7,9 +8,10 @@ struct grid
     struct fabtrimino* active_piece;
     struct square* matrix[GRID_WIDTH][GRID_HEIGHT];
     struct vector active_piece_pos;
+    struct next* next_pieces;
 };
 
-struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport)
+struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* next)
 {
     assert(renderer != NULL);
     assert(viewport != NULL);
@@ -20,6 +22,8 @@ struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport)
     grid->renderer = renderer;
     grid->viewport = viewport;
     grid->active_piece = NULL;
+
+    grid->next_pieces = next;
 
     return grid;
 }
@@ -34,18 +38,32 @@ void grid_receive(struct grid* grid, struct fabtrimino* fab)
     grid->active_piece_pos = (struct vector) {.x = 3, .y = 0}; // TODO: adapt to shapes
 }
 
-void grid_draw(struct grid* g)
+void grid_draw(struct grid* grid)
 {
-    sdl_err(SDL_RenderSetViewport(g->renderer, g->viewport));
-    sdl_err(SDL_SetRenderDrawColor(g->renderer, 0x00, 0x00, 0x00, 0xFF));
+    sdl_err(SDL_RenderSetViewport(grid->renderer, grid->viewport));
+    sdl_err(SDL_SetRenderDrawColor(grid->renderer, 0x00, 0x00, 0x00, 0xFF));
     SDL_Rect background = {
         .x = 0,
         .y = 0,
-        .w = g->viewport->w,
-        .h = g->viewport->h
+        .w = grid->viewport->w,
+        .h = grid->viewport->h
     };
-    sdl_err(SDL_RenderFillRect(g->renderer, &background));
-    fab_draw(g->active_piece, g->renderer, &g->active_piece_pos);
+    sdl_err(SDL_RenderFillRect(grid->renderer, &background));
+
+    for (size_t i = 0; i < GRID_WIDTH; i++)
+    {
+        for (size_t j = 0; j < GRID_HEIGHT; j++)
+        {
+            if (grid->matrix[i][j] != NULL)
+            {
+                struct vector position = {0};
+                position.x = i;
+                position.y = j;
+                draw_square(grid->matrix[i][j], &position, grid->renderer);
+            }
+        }
+    }
+    fab_draw(grid->active_piece, grid->renderer, &grid->active_piece_pos);
 }
 
 void grid_rotate_piece_clockwise(struct grid* grid)
@@ -118,6 +136,7 @@ bool check_under(struct grid* grid)
     return true;
 }
 
+// TODO: add target based movement
 void grid_move_piece_left(struct grid* grid)
 {
     if (check_left(grid))
@@ -140,4 +159,22 @@ void grid_piece_fall(struct grid* grid)
     {
         grid->active_piece_pos.y+=1;
     }
+}
+
+void grid_lock_piece(struct grid* grid)
+{
+    struct vector offset = grid->active_piece_pos;
+    for (size_t i = 0; i < 4; i++)
+    {
+        for (size_t j = 0; j < 4; j++)
+        {
+            if (grid->active_piece->matrix[i][j] != NULL)
+            {
+                struct square* square = calloc(1, sizeof(square));
+                square->shape = grid->active_piece->matrix[i][j]->shape;
+                grid->matrix[i+offset.x][j+offset.y] = square;
+            }
+        }
+    }
+    grid_receive(grid, next_pull(grid->next_pieces));
 }
