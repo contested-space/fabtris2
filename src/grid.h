@@ -21,3 +21,5 @@ void grid_rotate_piece_counter_clockwise(struct grid*);
 void grid_move_piece_left(struct grid*);
 
 void grid_move_piece_right(struct grid*);
+
+void grid_piece_fall(struct grid*);

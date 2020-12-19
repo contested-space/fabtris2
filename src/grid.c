@@ -98,6 +98,26 @@ bool check_right(struct grid* grid)
     return true;
 }
 
+bool check_under(struct grid* grid)
+{
+    struct vector offset = grid->active_piece_pos;
+    struct fabtrimino* fab = grid->active_piece;
+    for (size_t i = 0; i < 4; i++)
+    {
+        for (size_t j = 0; j < 4; j++)
+        {
+            if (fab->matrix[i][j] != NULL)
+            {
+                if ((int8_t) j + offset.y + 1 >= GRID_VISIBLE_HEIGHT)
+                {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 void grid_move_piece_left(struct grid* grid)
 {
     if (check_left(grid))
@@ -112,4 +132,12 @@ void grid_move_piece_right(struct grid* grid)
         {
             grid->active_piece_pos.x+=1;
         }
+}
+
+void grid_piece_fall(struct grid* grid)
+{
+    if (check_under(grid))
+    {
+        grid->active_piece_pos.y+=1;
+    }
 }

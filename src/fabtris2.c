@@ -94,6 +94,9 @@ int main(int argc, char* argv[])
                 case SDLK_RIGHT:
                     grid_move_piece_right(grid_screen);
                     break;
+                case SDLK_DOWN:
+                    grid_piece_fall(grid_screen);
+                    break;
                 default:
                 {
                     struct fabtrimino* fab = next_pull(next_screen);
