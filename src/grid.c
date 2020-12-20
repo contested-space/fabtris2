@@ -130,6 +130,11 @@ bool check_under(struct grid* grid)
                 {
                     return false;
                 }
+                if (grid->matrix[i + offset.x][(int8_t) j + offset.y + 1] != NULL)
+                {
+
+                    return false;
+                }
             }
         }
     }
