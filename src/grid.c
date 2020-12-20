@@ -11,6 +11,8 @@ struct grid
     struct next* next_pieces;
 };
 
+const size_t GRID_OFFSET = 20;
+
 struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* next)
 {
     assert(renderer != NULL);
@@ -35,7 +37,7 @@ void grid_receive(struct grid* grid, struct fabtrimino* fab)
         fab_free(grid->active_piece);
     }
     grid->active_piece = fab;
-    grid->active_piece_pos = (struct vector) {.x = 3, .y = 0}; // TODO: adapt to shapes
+    grid->active_piece_pos = (struct vector) {.x = 3, .y = GRID_OFFSET - 1}; // TODO: adapt to shapes
 }
 
 void grid_draw(struct grid* grid)
@@ -52,18 +54,22 @@ void grid_draw(struct grid* grid)
 
     for (size_t i = 0; i < GRID_WIDTH; i++)
     {
-        for (size_t j = 0; j < GRID_HEIGHT; j++)
+        for (size_t j = 0 + GRID_OFFSET; j < GRID_HEIGHT; j++)
         {
             if (grid->matrix[i][j] != NULL)
             {
                 struct vector position = {0};
                 position.x = i;
-                position.y = j;
+                position.y = j - GRID_OFFSET;
                 draw_square(grid->matrix[i][j], &position, grid->renderer);
             }
         }
     }
-    fab_draw(grid->active_piece, grid->renderer, &grid->active_piece_pos);
+    struct vector visible_position = (struct vector) {
+        .x = grid->active_piece_pos.x,
+        .y = grid->active_piece_pos.y - GRID_VISIBLE_HEIGHT
+    };
+    fab_draw(grid->active_piece, grid->renderer, &visible_position);
 }
 
 void grid_rotate_piece_clockwise(struct grid* grid)
@@ -134,7 +140,7 @@ bool check_under(struct grid* grid)
         {
             if (fab->matrix[i][j] != NULL)
             {
-                if ((int8_t) j + offset.y + 1 >= GRID_VISIBLE_HEIGHT)
+                if ((int8_t) j + offset.y + 1 >= GRID_HEIGHT)
                 {
                     return false;
                 }
@@ -216,7 +222,7 @@ void clear_lines(struct grid* grid)
     size_t cleared_lines[4];
 
     size_t nb_cleared_lines = 0;
-    for (size_t i = 0; i < GRID_VISIBLE_HEIGHT; i++)
+    for (size_t i = 0; i < GRID_HEIGHT; i++)
     {
         if (check_full_line(grid, i))
         {
