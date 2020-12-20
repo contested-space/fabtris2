@@ -90,6 +90,11 @@ bool check_left(struct grid* grid)
                 {
                     return false;
                 }
+                if (grid->matrix[i + offset.x - 1][(int8_t) j + offset.y] != NULL)
+                {
+
+                    return false;
+                }
             }
         }
     }
@@ -108,6 +113,11 @@ bool check_right(struct grid* grid)
             {
                 if ((int8_t) i + offset.x + 1 >= 10)
                 {
+                    return false;
+                }
+                if (grid->matrix[i + offset.x + 1][(int8_t) j + offset.y] != NULL)
+                {
+
                     return false;
                 }
             }
