@@ -29,3 +29,5 @@ void fab_rotate_clockwise(struct fabtrimino*);
 void fab_rotate_counter_clockwise(struct fabtrimino*);
 
 void draw_square(struct square*, struct vector*, SDL_Renderer*);
+
+void free_square(struct square*);

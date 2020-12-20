@@ -92,7 +92,6 @@ bool check_left(struct grid* grid)
                 }
                 if (grid->matrix[i + offset.x - 1][(int8_t) j + offset.y] != NULL)
                 {
-
                     return false;
                 }
             }
@@ -117,7 +116,6 @@ bool check_right(struct grid* grid)
                 }
                 if (grid->matrix[i + offset.x + 1][(int8_t) j + offset.y] != NULL)
                 {
-
                     return false;
                 }
             }
@@ -176,6 +174,70 @@ void grid_piece_fall(struct grid* grid)
     }
 }
 
+bool check_full_line(struct grid* grid, size_t line_number)
+{
+    for (size_t i = 0; i < GRID_WIDTH; i++)
+    {
+        if (grid->matrix[i][line_number] == NULL)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+void move_squares_down(struct grid* grid, size_t bottom)
+{
+    for (size_t j = bottom; j > 0; j--)
+    {
+        for (size_t i = 0; i < GRID_WIDTH; i++)
+        {
+            grid->matrix[i][j] = grid->matrix[i][j - 1];
+        }
+    }
+    for (size_t i = 0; i < GRID_WIDTH; i++)
+    {
+        grid->matrix[i][0] = NULL;
+    }
+
+}
+
+void clear_line(struct grid* grid, size_t line_number)
+{
+    for(size_t i = 0; i < GRID_WIDTH; i++)
+    {
+        free_square(grid->matrix[i][line_number]);
+        grid->matrix[i][line_number] = NULL;
+    }
+}
+
+void clear_lines(struct grid* grid)
+{
+    size_t cleared_lines[4];
+
+    size_t nb_cleared_lines = 0;
+    for (size_t i = 0; i < GRID_VISIBLE_HEIGHT; i++)
+    {
+        if (check_full_line(grid, i))
+        {
+            nb_cleared_lines++;
+            cleared_lines[nb_cleared_lines - 1] = i;
+        }
+    }
+
+    // TODO: add a kickass effect highlighting all the cleared lines
+
+    if (nb_cleared_lines > 0)
+    {
+        for (size_t i = 0; i < nb_cleared_lines; i++)
+        {
+            clear_line(grid, cleared_lines[i]);
+            move_squares_down(grid, cleared_lines[i]);
+        }
+    }
+}
+
+
 void grid_lock_piece(struct grid* grid)
 {
     struct vector offset = grid->active_piece_pos;
@@ -191,5 +253,6 @@ void grid_lock_piece(struct grid* grid)
             }
         }
     }
+    clear_lines(grid);
     grid_receive(grid, next_pull(grid->next_pieces));
 }
