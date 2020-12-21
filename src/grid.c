@@ -178,6 +178,10 @@ void grid_piece_fall(struct grid* grid)
     {
         grid->active_piece_pos.y+=1;
     }
+    else
+    {
+        grid_lock_piece(grid);
+    }
 }
 
 bool check_full_line(struct grid* grid, size_t line_number)
