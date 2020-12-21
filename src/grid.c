@@ -1,5 +1,6 @@
 #include "grid.h"
 #include "fabtrimino.h"
+#include "hold.h"
 
 struct grid
 {
@@ -9,11 +10,12 @@ struct grid
     struct square* matrix[GRID_WIDTH][GRID_HEIGHT];
     struct vector active_piece_pos;
     struct next* next_pieces;
+    struct hold* held_piece;
 };
 
 const size_t GRID_OFFSET = 20;
 
-struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* next)
+struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* next, struct hold* hold)
 {
     assert(renderer != NULL);
     assert(viewport != NULL);
@@ -24,18 +26,14 @@ struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* 
     grid->renderer = renderer;
     grid->viewport = viewport;
     grid->active_piece = NULL;
-
     grid->next_pieces = next;
+    grid->held_piece = hold;
 
     return grid;
 }
 
 void grid_receive(struct grid* grid, struct fabtrimino* fab)
 {
-    if (grid->active_piece != NULL)
-    {
-        fab_free(grid->active_piece);
-    }
     grid->active_piece = fab;
     grid->active_piece_pos = (struct vector) {.x = 3, .y = GRID_OFFSET - 1}; // TODO: adapt to shapes
 }
@@ -264,5 +262,20 @@ void grid_lock_piece(struct grid* grid)
         }
     }
     clear_lines(grid);
+    fab_free(grid->active_piece);
     grid_receive(grid, next_pull(grid->next_pieces));
+}
+
+void grid_hold_piece(struct grid* grid)
+{
+    struct fabtrimino* new_held = grid->active_piece;
+    struct fabtrimino* old_held = hold_switch(grid->held_piece, new_held);
+    if (old_held == NULL)
+    {
+        grid_receive(grid, next_pull(grid->next_pieces));
+    }
+    else
+    {
+        grid_receive(grid, old_held);
+    }
 }

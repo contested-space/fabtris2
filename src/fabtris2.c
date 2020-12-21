@@ -6,6 +6,7 @@
 #include "fabtrimino.h"
 #include "next.h"
 #include "grid.h"
+#include "hold.h"
 
 SDL_Window* createWindow(const char* title)
 {
@@ -40,31 +41,37 @@ int main(int argc, char* argv[])
 
 
     size_t viewport_width = GRID_SQUARE_LENGTH * 6; //leaves 1 square on each size
-    SDL_Rect nextViewport = {
+    SDL_Rect next_viewport = {
         .x = SCREEN_WIDTH - viewport_width,
         .y = 0,
         .w = viewport_width,
         .h = GRID_SQUARE_LENGTH * 20 //allows for 5 pieces
     };
 
-    struct next* next_screen = next_make(renderer, &nextViewport);
+    struct next* next_screen = next_make(renderer, &next_viewport);
 
+    SDL_Rect hold_viewport = {
+        .x = 0,
+        .y = 0,
+        .w = GRID_SQUARE_LENGTH * 4,
+        .h = GRID_SQUARE_LENGTH * 4 //allows for 5 pieces
+    };
+    struct hold* hold_screen = hold_make(renderer, &hold_viewport);
 
-
-    SDL_Rect gridViewport = {
+    SDL_Rect grid_viewport = {
         .x = SCREEN_WIDTH/4, // This is sketchy. Must be fixed at some point
         .y = 0,
         .w = GRID_WIDTH * GRID_SQUARE_LENGTH,
         .h = GRID_VISIBLE_HEIGHT * GRID_SQUARE_LENGTH
     };
 
-    struct grid* grid_screen = grid_make(renderer, &gridViewport, next_screen);
+    struct grid* grid_screen = grid_make(renderer, &grid_viewport, next_screen, hold_screen);
 
     struct fabtrimino* first_piece = next_pull(next_screen);
     grid_receive(grid_screen, first_piece);
 
 
-    SDL_Rect fullViewport = {
+    SDL_Rect full_viewport = {
         .x = 0,
         .y = 0,
         .w = SCREEN_WIDTH,
@@ -98,17 +105,18 @@ int main(int argc, char* argv[])
                     grid_piece_fall(grid_screen);
                     break;
                 case SDLK_SPACE:
-                    grid_lock_piece(grid_screen);
+                    grid_hold_piece(grid_screen);
                     break;
                 default:;
                 }
             }
         }
-        sdl_err(SDL_RenderSetViewport(renderer, &fullViewport));
+        sdl_err(SDL_RenderSetViewport(renderer, &full_viewport));
         sdl_err(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF));
         sdl_err(SDL_RenderClear(renderer));
         next_draw(next_screen);
         grid_draw(grid_screen);
+        hold_draw(hold_screen);
         SDL_RenderPresent(renderer);
     }
 }
