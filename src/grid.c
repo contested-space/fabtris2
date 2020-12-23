@@ -1,6 +1,7 @@
 #include "grid.h"
 #include "fabtrimino.h"
 #include "hold.h"
+#include "square.h"
 
 struct grid
 {
@@ -59,7 +60,7 @@ void grid_draw(struct grid* grid)
                 struct vector position = {0};
                 position.x = i;
                 position.y = j - GRID_OFFSET;
-                draw_square(grid->matrix[i][j], &position, grid->renderer);
+                square_draw(grid->matrix[i][j], &position, grid->renderer);
             }
         }
     }
@@ -214,7 +215,7 @@ void clear_line(struct grid* grid, size_t line_number)
 {
     for(size_t i = 0; i < GRID_WIDTH; i++)
     {
-        free_square(grid->matrix[i][line_number]);
+        square_free(grid->matrix[i][line_number]);
         grid->matrix[i][line_number] = NULL;
     }
 }
