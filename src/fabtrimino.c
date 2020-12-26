@@ -98,6 +98,8 @@ struct fabtrimino* fab_make(enum shape shape)
 
     fab->pos = (struct vector) {.x = 0, .y = 0};
 
+    fab->rotation_state = 0;
+
     return fab;
 }
 
@@ -133,54 +135,52 @@ void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* off
     }
 }
 
-size_t size_of_matrix(enum shape shape)
-{
-    switch(shape) {
-    case T:
-    case S:
-    case Z:
-    case L:
-    case J:
-        return 3;
-    case I:
-        return 4;
-    case O:
-    default:
-        return 0;
-    }
-}
-
 void fab_rotate_clockwise(struct fabtrimino* fab)
 {
-    size_t size = size_of_matrix(fab->shape);
+    size_t size = matrix_size(fab->shape);
     if (size != 0)
     {
         matrix_rotate_clockwise(fab->matrix, size);
+        fab->rotation_state = (fab->rotation_state + 1) % 4;
     }
+
 }
 
 void fab_rotate_counter_clockwise(struct fabtrimino* fab)
 {
-    size_t size = size_of_matrix(fab->shape);
+    size_t size = matrix_size(fab->shape);
     if (size != 0)
     {
         matrix_rotate_counter_clockwise(fab->matrix, size);
+        fab->rotation_state = (4 + fab->rotation_state - 1) % 4;
     }
 }
 
 void fab_copy_matrix(struct fabtrimino* fab, struct square* matrix[4][4])
 {
+    matrix_free(matrix);
     for(int i = 0; i < 4; i++)
     {
         for(int j = 0; j < 4; j++)
         {
             if (fab->matrix[i][j] != NULL)
             {
-                square_free(fab->matrix[i][j]);
+                matrix[i][j] = square_make(fab->shape);
             }
+        }
+    }
+}
+
+void fab_set_matrix(struct fabtrimino* fab, struct square* matrix[4][4])
+{
+    matrix_free(fab->matrix);
+    for(int i = 0; i < 4; i++)
+    {
+        for(int j = 0; j < 4; j++)
+        {
             if (matrix[i][j] != NULL)
             {
-                fab->matrix[i][j] = calloc(1, sizeof(struct square));
+                fab->matrix[i][j] = square_make(fab->shape);
             }
         }
     }

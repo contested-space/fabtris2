@@ -2,6 +2,7 @@
 #include "fabtrimino.h"
 #include "hold.h"
 #include "square.h"
+#include "matrix.h"
 
 struct grid
 {
@@ -71,8 +72,35 @@ void grid_draw(struct grid* grid)
     fab_draw(grid->active_piece, grid->renderer, &visible_position);
 }
 
+bool check_position(struct grid* grid, struct square* matrix[4][4], struct vector position)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (matrix[i][j] != NULL && grid->matrix[i+position.x][j+position.y] != NULL)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void grid_rotate_piece_clockwise(struct grid* grid)
 {
+    struct square* matrix[4][4];
+    memset(matrix, 0, 4*4*sizeof(struct square*));
+
+    fab_copy_matrix(grid->active_piece, matrix);
+    size_t size = matrix_size(grid->active_piece->shape);
+
+    matrix_rotate_clockwise(matrix, size);
+
+    check_position(grid, matrix, grid->active_piece_pos);
+
+    matrix_free(matrix);
+
     fab_rotate_clockwise(grid->active_piece);
 }
 

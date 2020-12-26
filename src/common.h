@@ -33,8 +33,8 @@
 #define unlikely(x)  __builtin_expect(x, 0)
 
 struct vector {
-    int x;
-    int y;
+    int8_t x;
+    int8_t y;
 };
 
 static const size_t SCREEN_WIDTH = 640;
