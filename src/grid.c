@@ -78,6 +78,13 @@ bool check_position(struct grid* grid, struct square* matrix[4][4], struct vecto
     {
         for (int j = 0; j < 4; j++)
         {
+            if (matrix[i][j] != NULL &&
+                (position.x + i < 0 ||
+                 position.x + i >= GRID_WIDTH ||
+                 position.y + j >= GRID_HEIGHT))
+            {
+                return false;
+            }
             if (matrix[i][j] != NULL && grid->matrix[i+position.x][j+position.y] != NULL)
             {
                 return false;
@@ -87,26 +94,821 @@ bool check_position(struct grid* grid, struct square* matrix[4][4], struct vecto
     return true;
 }
 
-void grid_rotate_piece_clockwise(struct grid* grid)
+//TODO: This is not OK. This needs to be refactored into
+//      something that isn't 1000+ lines long
+void grid_rotate_I_clockwise(struct grid* grid)
 {
     struct square* matrix[4][4];
     memset(matrix, 0, 4*4*sizeof(struct square*));
 
     fab_copy_matrix(grid->active_piece, matrix);
-    size_t size = matrix_size(grid->active_piece->shape);
 
+    size_t size = matrix_size(grid->active_piece->shape);
     matrix_rotate_clockwise(matrix, size);
 
-    check_position(grid, matrix, grid->active_piece_pos);
+    struct vector position;
+
+    bool can_rotate = false;
+
+    switch (grid->active_piece->rotation_state) {
+    case 0:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x - 2;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x - 2;
+        position.y = grid->active_piece_pos.y + 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 1:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x + 2;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x + 2;
+        position.y = grid->active_piece_pos.y + 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 2:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x + 2;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x + 2;
+        position.y = grid->active_piece_pos.y - 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 3:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x - 2;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x - 2;
+        position.y = grid->active_piece_pos.y - 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+    }
+    //If all the tests have failed, the piece isn't rotated
+    if (can_rotate)
+    {
+        fab_rotate_clockwise(grid->active_piece);
+        grid->active_piece_pos.x = position.x;
+        grid->active_piece_pos.y = position.y;
+    }
 
     matrix_free(matrix);
+}
 
-    fab_rotate_clockwise(grid->active_piece);
+void grid_rotate_I_counter_clockwise(struct grid* grid)
+{
+    struct square* matrix[4][4];
+    memset(matrix, 0, 4*4*sizeof(struct square*));
+
+    fab_copy_matrix(grid->active_piece, matrix);
+
+    size_t size = matrix_size(grid->active_piece->shape);
+    matrix_rotate_counter_clockwise(matrix, size);
+
+    struct vector position;
+
+    bool can_rotate = false;
+
+    switch (grid->active_piece->rotation_state) {
+    case 0:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x + 2;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x + 2;
+        position.y = grid->active_piece_pos.y + 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 1:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x + 2;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x + 2;
+        position.y = grid->active_piece_pos.y - 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 2:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x - 2;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x - 2;
+        position.y = grid->active_piece_pos.y - 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 3:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x - 2;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x - 2;
+        position.y = grid->active_piece_pos.y + 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+    }
+    //If all the tests have failed, the piece isn't rotated
+    if (can_rotate)
+    {
+        fab_rotate_counter_clockwise(grid->active_piece);
+        grid->active_piece_pos.x = position.x;
+        grid->active_piece_pos.y = position.y;
+    }
+
+    matrix_free(matrix);
+}
+
+void grid_rotate_default_clockwise(struct grid* grid)
+{
+    struct square* matrix[4][4];
+    memset(matrix, 0, 4*4*sizeof(struct square*));
+
+    fab_copy_matrix(grid->active_piece, matrix);
+
+    size_t size = matrix_size(grid->active_piece->shape);
+    matrix_rotate_clockwise(matrix, size);
+
+    struct vector position;
+
+    bool can_rotate = false;
+
+    switch (grid->active_piece->rotation_state) {
+    case 0:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y - 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 1:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y + 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 2:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y - 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 3:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y + 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+    }
+    //If all the tests have failed, the piece isn't rotated
+    if (can_rotate)
+    {
+        grid->active_piece_pos.x = position.x;
+        grid->active_piece_pos.y = position.y;
+        fab_rotate_clockwise(grid->active_piece);
+    }
+
+    matrix_free(matrix);
+}
+
+void grid_rotate_default_counter_clockwise(struct grid* grid)
+{
+    struct square* matrix[4][4];
+    memset(matrix, 0, 4*4*sizeof(struct square*));
+
+    fab_copy_matrix(grid->active_piece, matrix);
+
+    size_t size = matrix_size(grid->active_piece->shape);
+    matrix_rotate_counter_clockwise(matrix, size);
+
+    struct vector position;
+
+    bool can_rotate = false;
+
+    switch (grid->active_piece->rotation_state) {
+    case 0:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y - 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 1:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y + 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x + 1;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 2:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y - 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y + 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        break;
+    case 3:
+        //test 1
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 2
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 3
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y + 1;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 4
+        position.x = grid->active_piece_pos.x;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+        // test 5
+        position.x = grid->active_piece_pos.x - 1;
+        position.y = grid->active_piece_pos.y - 2;
+        if (check_position(grid, matrix, position))
+        {
+            can_rotate = true;
+            break;
+        }
+    }
+    //If all the tests have failed, the piece isn't rotated
+    if (can_rotate)
+    {
+        fab_rotate_counter_clockwise(grid->active_piece);
+        grid->active_piece_pos.x = position.x;
+        grid->active_piece_pos.y = position.y;
+    }
+
+    matrix_free(matrix);
+}
+
+
+void grid_rotate_piece_clockwise(struct grid* grid)
+{
+    switch(grid->active_piece->shape) {
+    case O:
+        // O piece doesn't need to rotate
+        break;
+    case I:
+        grid_rotate_I_clockwise(grid);
+        break;
+    case J:
+    case L:
+    case S:
+    case Z:
+    case T:
+    default:
+        grid_rotate_default_clockwise(grid);
+    }
 }
 
 void grid_rotate_piece_counter_clockwise(struct grid* grid)
 {
-    fab_rotate_counter_clockwise(grid->active_piece);
+        switch(grid->active_piece->shape) {
+    case O:
+        // O piece doesn't need to rotate
+        break;
+    case I:
+        grid_rotate_I_counter_clockwise(grid);
+        break;
+    case J:
+    case L:
+    case S:
+    case Z:
+    case T:
+    default:
+        grid_rotate_default_counter_clockwise(grid);
+    }
 }
 
 bool check_left(struct grid* grid)
