@@ -52,6 +52,25 @@ void grid_draw(struct grid* grid)
     };
     sdl_err(SDL_RenderFillRect(grid->renderer, &background));
 
+    //TODO: Make visible grid optional
+    sdl_err(SDL_SetRenderDrawColor(grid->renderer, 0x00, 0x13, 0xFF, 0xFF));
+    for (size_t i = 0; i < GRID_WIDTH; i++)
+    {
+        sdl_err(SDL_RenderDrawLine(grid->renderer,
+                                   i * GRID_SQUARE_LENGTH,
+                                   0,
+                                   i * GRID_SQUARE_LENGTH,
+                                   GRID_HEIGHT * GRID_SQUARE_LENGTH));
+    }
+    for (size_t j = 0; j < GRID_HEIGHT; j++)
+    {
+        sdl_err(SDL_RenderDrawLine(grid->renderer,
+                                   0,
+                                   j * GRID_SQUARE_LENGTH,
+                                   GRID_WIDTH * GRID_SQUARE_LENGTH,
+                                   j * GRID_SQUARE_LENGTH));
+    }
+
     for (size_t i = 0; i < GRID_WIDTH; i++)
     {
         for (size_t j = 0 + GRID_OFFSET; j < GRID_HEIGHT; j++)
@@ -69,6 +88,7 @@ void grid_draw(struct grid* grid)
         .x = grid->active_piece_pos.x,
         .y = grid->active_piece_pos.y - GRID_VISIBLE_HEIGHT
     };
+
     fab_draw(grid->active_piece, grid->renderer, &visible_position);
 }
 
