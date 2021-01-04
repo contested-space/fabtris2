@@ -13,6 +13,9 @@ struct grid
     struct vector active_piece_pos;
     struct next* next_pieces;
     struct hold* held_piece;
+    bool active_piece_is_moving_left;
+    bool active_piece_is_moving_right;
+    size_t movement_start_time;
 };
 
 const size_t GRID_OFFSET = 20;
@@ -30,8 +33,22 @@ struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* 
     grid->active_piece = NULL;
     grid->next_pieces = next;
     grid->held_piece = hold;
+    grid->active_piece_is_moving_left = false;
+    grid->active_piece_is_moving_right = false;
 
     return grid;
+}
+
+void grid_update(struct grid* grid)
+{
+    if (grid->active_piece_is_moving_left || grid->active_piece_is_moving_right)
+    {
+        if (SDL_GetTicks() - grid->movement_start_time > MOVE_DURATION)
+        {
+            grid->active_piece_is_moving_left = false;
+            grid->active_piece_is_moving_right = false;
+        }
+    }
 }
 
 void grid_receive(struct grid* grid, struct fabtrimino* fab)
@@ -89,7 +106,22 @@ void grid_draw(struct grid* grid)
         .y = grid->active_piece_pos.y - GRID_VISIBLE_HEIGHT
     };
 
-    fab_draw(grid->active_piece, grid->renderer, &visible_position);
+    if (grid->active_piece_is_moving_left)
+    {
+        int32_t partial_move = grid->movement_start_time - SDL_GetTicks();
+        visible_position.x += 1;
+        fab_draw_moving(grid->active_piece, grid->renderer, &visible_position, partial_move);
+    }
+    else if (grid->active_piece_is_moving_right)
+    {
+        int32_t partial_move = SDL_GetTicks() - grid->movement_start_time;
+        visible_position.x -= 1;
+        fab_draw_moving(grid->active_piece, grid->renderer, &visible_position, partial_move);
+    }
+    else
+    {
+        fab_draw(grid->active_piece, grid->renderer, &visible_position);
+    }
 }
 
 bool check_position(struct grid* grid, struct square* matrix[4][4], struct vector position)
@@ -1007,16 +1039,39 @@ bool check_under(struct grid* grid)
 // TODO: add target based movement
 void grid_move_piece_left(struct grid* grid)
 {
+    if (grid->active_piece_is_moving_left)
+    {
+        return;
+    }
+    if (grid->active_piece_is_moving_right)
+    {
+        //TODO: move left
+        return;
+    }
     if (check_left(grid))
         {
+            grid->movement_start_time = SDL_GetTicks();
+            grid->active_piece_is_moving_left = true;
             grid->active_piece_pos.x-=1;
         }
 }
 
 void grid_move_piece_right(struct grid* grid)
 {
+
+    if (grid->active_piece_is_moving_right)
+    {
+        return;
+    }
+    if (grid->active_piece_is_moving_left)
+    {
+        //TODO: move right
+        return;
+    }
         if (check_right(grid))
         {
+            grid->movement_start_time = SDL_GetTicks();
+            grid->active_piece_is_moving_right = true;
             grid->active_piece_pos.x+=1;
         }
 }

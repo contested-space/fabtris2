@@ -86,6 +86,7 @@ int main(int argc, char* argv[])
             {
                 return 0;
             }
+            // TODO: change that to see if key is active
             if (e.type == SDL_KEYDOWN)
             {
                 switch(e.key.keysym.sym) {
@@ -111,6 +112,7 @@ int main(int argc, char* argv[])
                 }
             }
         }
+        grid_update(grid_screen);
         sdl_err(SDL_RenderSetViewport(renderer, &full_viewport));
         sdl_err(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF));
         sdl_err(SDL_RenderClear(renderer));

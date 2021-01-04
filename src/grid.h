@@ -26,3 +26,5 @@ void grid_piece_fall(struct grid*);
 void grid_lock_piece(struct grid*);
 
 void grid_hold_piece(struct grid*);
+
+void grid_update(struct grid*);

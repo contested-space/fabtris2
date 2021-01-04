@@ -42,6 +42,7 @@ static const size_t SCREEN_HEIGHT = 480;
 static const size_t GRID_WIDTH = SCREEN_WIDTH/2;
 static const size_t GRID_HEIGHT = SCREEN_HEIGHT;
 static const size_t GRID_SQUARE_LENGTH = 24;
+static const size_t MOVE_DURATION = 100;
 
 enum shape
 {
