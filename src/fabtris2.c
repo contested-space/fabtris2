@@ -86,31 +86,31 @@ int main(int argc, char* argv[])
             {
                 return 0;
             }
-            // TODO: change that to see if key is active
-            if (e.type == SDL_KEYDOWN)
-            {
-                switch(e.key.keysym.sym) {
-                case SDLK_x:
-                    grid_rotate_piece_clockwise(grid_screen);
-                    break;
-                case SDLK_z:
-                    grid_rotate_piece_counter_clockwise(grid_screen);
-                    break;
-                case SDLK_LEFT:
-                    grid_move_piece_left(grid_screen);
-                    break;
-                case SDLK_RIGHT:
-                    grid_move_piece_right(grid_screen);
-                    break;
-                case SDLK_DOWN:
-                    grid_piece_fall(grid_screen);
-                    break;
-                case SDLK_SPACE:
-                    grid_hold_piece(grid_screen);
-                    break;
-                default:;
-                }
-            }
+        }
+        const uint8_t* current_key_states = SDL_GetKeyboardState(NULL);
+        if (current_key_states[SDL_SCANCODE_X])
+        {
+            grid_rotate_piece_clockwise(grid_screen);
+        }
+        if (current_key_states[SDL_SCANCODE_Z])
+        {
+            grid_rotate_piece_counter_clockwise(grid_screen);
+        }
+        if (current_key_states[SDL_SCANCODE_LEFT])
+        {
+            grid_move_piece_left(grid_screen);
+        }
+        if (current_key_states[SDL_SCANCODE_RIGHT])
+        {
+            grid_move_piece_right(grid_screen);
+        }
+        if (current_key_states[SDL_SCANCODE_DOWN])
+        {
+            grid_piece_fall(grid_screen);
+        }
+        if (current_key_states[SDL_SCANCODE_SPACE])
+        {
+            grid_hold_piece(grid_screen);
         }
         grid_update(grid_screen);
         sdl_err(SDL_RenderSetViewport(renderer, &full_viewport));
