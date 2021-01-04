@@ -20,6 +20,8 @@ struct grid
     size_t movement_start_time;
     size_t fall_start_time;
     bool recently_held;
+    bool active_piece_is_locking;
+    size_t locking_start_time;
 };
 
 const size_t GRID_OFFSET = 20;
@@ -41,6 +43,7 @@ struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* 
     grid->active_piece_is_moving_right = false;
     grid->active_piece_is_rotating = false;
     grid->recently_held = false;
+    grid->active_piece_is_locking = false;
 
     return grid;
 }
@@ -61,6 +64,13 @@ void grid_update(struct grid* grid)
         if (now > grid->rotation_start_time + ROTATION_DURATION)
         {
             grid->active_piece_is_rotating = false;
+        }
+    }
+    if (grid->active_piece_is_locking)
+    {
+        if (now > grid->locking_start_time + LOCKING_DURATION)
+        {
+            grid_lock_piece(grid);
         }
     }
     grid_piece_fall(grid);
@@ -122,7 +132,7 @@ void grid_draw(struct grid* grid)
         .y = grid->active_piece_pos.y - GRID_VISIBLE_HEIGHT
     };
     visible_position.y -= 1; //adjust drawing position to account for movement illusion
-        int32_t partial_move_vertical = SDL_GetTicks() - grid->fall_start_time;
+    int32_t partial_move_vertical = {grid->active_piece_is_locking ? FALL_DURATION : SDL_GetTicks() - grid->fall_start_time};
     if (grid->active_piece_is_moving_left)
     {
         int32_t partial_move_lateral = grid->movement_start_time - SDL_GetTicks();
@@ -145,7 +155,6 @@ void grid_draw(struct grid* grid)
     }
     else
     {
-
         fab_draw_moving(grid->active_piece, grid->renderer, &visible_position, 0, partial_move_vertical);
     }
 }
@@ -1116,20 +1125,34 @@ void grid_move_piece_right(struct grid* grid)
         }
 }
 
+void grid_start_locking_piece(struct grid* grid)
+{
+    grid->locking_start_time = SDL_GetTicks();
+    grid->active_piece_is_locking = true;
+}
+
 void grid_piece_fall(struct grid* grid)
 {
     // TODO: base duration on level
+    if (grid->active_piece_is_locking)
+    {
+        if (!check_under(grid))
+        {
+            return;
+        }
+    }
     uint32_t now = SDL_GetTicks();
     if (now > grid->fall_start_time + FALL_DURATION)
     {
         if (check_under(grid))
         {
+            grid->active_piece_is_locking = false;
             grid->active_piece_pos.y+=1;
             grid->fall_start_time = now;
         }
         else
         {
-            grid_lock_piece(grid);
+            grid_start_locking_piece(grid);
         }
     }
 }
@@ -1200,6 +1223,7 @@ void clear_lines(struct grid* grid)
 
 void grid_lock_piece(struct grid* grid)
 {
+    grid->active_piece_is_locking = false;
     struct vector offset = grid->active_piece_pos;
     for (size_t i = 0; i < 4; i++)
     {
