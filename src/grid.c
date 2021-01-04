@@ -19,6 +19,7 @@ struct grid
     size_t rotation_start_time;
     size_t movement_start_time;
     size_t fall_start_time;
+    bool recently_held;
 };
 
 const size_t GRID_OFFSET = 20;
@@ -39,6 +40,7 @@ struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* 
     grid->active_piece_is_moving_left = false;
     grid->active_piece_is_moving_right = false;
     grid->active_piece_is_rotating = false;
+    grid->recently_held = false;
 
     return grid;
 }
@@ -1211,6 +1213,7 @@ void grid_lock_piece(struct grid* grid)
             }
         }
     }
+    grid->recently_held = false;
     clear_lines(grid);
     fab_free(grid->active_piece);
     grid_receive(grid, next_pull(grid->next_pieces));
@@ -1218,6 +1221,11 @@ void grid_lock_piece(struct grid* grid)
 
 void grid_hold_piece(struct grid* grid)
 {
+    if (grid->recently_held)
+    {
+        return;
+    }
+    grid->recently_held = true;
     struct fabtrimino* new_held = grid->active_piece;
     struct fabtrimino* old_held = hold_switch(grid->held_piece, new_held);
     if (old_held == NULL)
