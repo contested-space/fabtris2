@@ -15,6 +15,8 @@ struct grid
     struct hold* held_piece;
     bool active_piece_is_moving_left;
     bool active_piece_is_moving_right;
+    bool active_piece_is_rotating;
+    size_t rotation_start_time;
     size_t movement_start_time;
     size_t fall_start_time;
 };
@@ -36,18 +38,27 @@ struct grid* grid_make(SDL_Renderer* renderer, SDL_Rect* viewport, struct next* 
     grid->held_piece = hold;
     grid->active_piece_is_moving_left = false;
     grid->active_piece_is_moving_right = false;
+    grid->active_piece_is_rotating = false;
 
     return grid;
 }
 
 void grid_update(struct grid* grid)
 {
+    uint32_t now = SDL_GetTicks();
     if (grid->active_piece_is_moving_left || grid->active_piece_is_moving_right)
     {
-        if (SDL_GetTicks() - grid->movement_start_time > MOVE_DURATION)
+        if (now - grid->movement_start_time > MOVE_DURATION)
         {
             grid->active_piece_is_moving_left = false;
             grid->active_piece_is_moving_right = false;
+        }
+    }
+    if (grid->active_piece_is_rotating)
+    {
+        if (now > grid->rotation_start_time + ROTATION_DURATION)
+        {
+            grid->active_piece_is_rotating = false;
         }
     }
     grid_piece_fall(grid);
@@ -940,6 +951,12 @@ void grid_rotate_default_counter_clockwise(struct grid* grid)
 
 void grid_rotate_piece_clockwise(struct grid* grid)
 {
+    if (grid->active_piece_is_rotating)
+    {
+        return;
+    }
+    grid->active_piece_is_rotating = true;
+    grid->rotation_start_time = SDL_GetTicks();
     switch(grid->active_piece->shape) {
     case O:
         // O piece doesn't need to rotate
@@ -959,7 +976,14 @@ void grid_rotate_piece_clockwise(struct grid* grid)
 
 void grid_rotate_piece_counter_clockwise(struct grid* grid)
 {
-        switch(grid->active_piece->shape) {
+
+    if (grid->active_piece_is_rotating)
+    {
+        return;
+    }
+    grid->active_piece_is_rotating = true;
+    grid->rotation_start_time = SDL_GetTicks();
+    switch(grid->active_piece->shape) {
     case O:
         // O piece doesn't need to rotate
         break;
