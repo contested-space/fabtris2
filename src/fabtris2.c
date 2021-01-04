@@ -106,7 +106,11 @@ int main(int argc, char* argv[])
         }
         if (current_key_states[SDL_SCANCODE_DOWN])
         {
-            grid_piece_fall(grid_screen);
+            //TODO: faster drop
+        }
+        if (current_key_states[SDL_SCANCODE_UP])
+        {
+            //TODO: hard drop
         }
         if (current_key_states[SDL_SCANCODE_SPACE])
         {

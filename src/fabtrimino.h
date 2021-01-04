@@ -15,7 +15,7 @@ void fab_free(struct fabtrimino*);
 
 void fab_draw(struct fabtrimino*, SDL_Renderer*, struct vector*);
 
-void fab_draw_moving(struct fabtrimino*, SDL_Renderer*, struct vector*, int32_t);
+void fab_draw_moving(struct fabtrimino*, SDL_Renderer*, struct vector*, int32_t, int32_t);
 
 void fab_rotate_clockwise(struct fabtrimino*);
 

@@ -57,16 +57,17 @@ int32_t lerp(int32_t origin_start, int32_t origin_end, int32_t origin_position, 
     return destination_start + adjustment;
 }
 
-void square_draw_moving(struct square* square, struct vector* position, SDL_Renderer* renderer, int32_t partial_move)
+void square_draw_moving(struct square* square, struct vector* position, SDL_Renderer* renderer, int32_t partial_move_lateral, int32_t partial_move_horizontal)
 {
     struct color color = shape_color(square->shape);
 
     sdl_err(SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF));
 
-    int32_t moving_adjustment = lerp(0, MOVE_DURATION, partial_move, 0, GRID_SQUARE_LENGTH);
+    int32_t lateral_adjustment = lerp(0, MOVE_DURATION, partial_move_lateral, 0, GRID_SQUARE_LENGTH);
+    int32_t horizontal_adjustment = lerp(0, FALL_DURATION, partial_move_horizontal, 0, GRID_SQUARE_LENGTH);
     SDL_Rect s = {
-        .x = position->x * GRID_SQUARE_LENGTH + moving_adjustment,
-        .y = position->y * GRID_SQUARE_LENGTH,
+        .x = position->x * GRID_SQUARE_LENGTH + lateral_adjustment,
+        .y = position->y * GRID_SQUARE_LENGTH + horizontal_adjustment,
         .w = GRID_SQUARE_LENGTH,
         .h = GRID_SQUARE_LENGTH
     };
@@ -75,5 +76,5 @@ void square_draw_moving(struct square* square, struct vector* position, SDL_Rend
 
 void square_draw(struct square* square, struct vector* position, SDL_Renderer* renderer)
 {
-    square_draw_moving(square, position, renderer, 0);
+    square_draw_moving(square, position, renderer, 0, 0);
 }

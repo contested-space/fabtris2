@@ -16,6 +16,7 @@ struct grid
     bool active_piece_is_moving_left;
     bool active_piece_is_moving_right;
     size_t movement_start_time;
+    size_t fall_start_time;
 };
 
 const size_t GRID_OFFSET = 20;
@@ -49,10 +50,12 @@ void grid_update(struct grid* grid)
             grid->active_piece_is_moving_right = false;
         }
     }
+    grid_piece_fall(grid);
 }
 
 void grid_receive(struct grid* grid, struct fabtrimino* fab)
 {
+    grid->fall_start_time = SDL_GetTicks();
     grid->active_piece = fab;
     grid->active_piece_pos = (struct vector) {.x = 3, .y = GRID_OFFSET - 1}; // TODO: adapt to shapes
 }
@@ -105,22 +108,32 @@ void grid_draw(struct grid* grid)
         .x = grid->active_piece_pos.x,
         .y = grid->active_piece_pos.y - GRID_VISIBLE_HEIGHT
     };
-
+    visible_position.y -= 1; //adjust drawing position to account for movement illusion
+        int32_t partial_move_vertical = SDL_GetTicks() - grid->fall_start_time;
     if (grid->active_piece_is_moving_left)
     {
-        int32_t partial_move = grid->movement_start_time - SDL_GetTicks();
-        visible_position.x += 1;
-        fab_draw_moving(grid->active_piece, grid->renderer, &visible_position, partial_move);
+        int32_t partial_move_lateral = grid->movement_start_time - SDL_GetTicks();
+        visible_position.x += 1; //also illusory adjustment
+        fab_draw_moving(grid->active_piece,
+                        grid->renderer,
+                        &visible_position,
+                        partial_move_lateral,
+                        partial_move_vertical);
     }
     else if (grid->active_piece_is_moving_right)
     {
-        int32_t partial_move = SDL_GetTicks() - grid->movement_start_time;
-        visible_position.x -= 1;
-        fab_draw_moving(grid->active_piece, grid->renderer, &visible_position, partial_move);
+        int32_t partial_move_lateral = SDL_GetTicks() - grid->movement_start_time;
+        visible_position.x -= 1; //here too
+        fab_draw_moving(grid->active_piece,
+                        grid->renderer,
+                        &visible_position,
+                        partial_move_lateral,
+                        partial_move_vertical);
     }
     else
     {
-        fab_draw(grid->active_piece, grid->renderer, &visible_position);
+
+        fab_draw_moving(grid->active_piece, grid->renderer, &visible_position, 0, partial_move_vertical);
     }
 }
 
@@ -1013,6 +1026,7 @@ bool check_right(struct grid* grid)
 
 bool check_under(struct grid* grid)
 {
+
     struct vector offset = grid->active_piece_pos;
     struct fabtrimino* fab = grid->active_piece;
     for (size_t i = 0; i < 4; i++)
@@ -1078,13 +1092,19 @@ void grid_move_piece_right(struct grid* grid)
 
 void grid_piece_fall(struct grid* grid)
 {
-    if (check_under(grid))
+    // TODO: base duration on level
+    uint32_t now = SDL_GetTicks();
+    if (now > grid->fall_start_time + FALL_DURATION)
     {
-        grid->active_piece_pos.y+=1;
-    }
-    else
-    {
-        grid_lock_piece(grid);
+        if (check_under(grid))
+        {
+            grid->active_piece_pos.y+=1;
+            grid->fall_start_time = now;
+        }
+        else
+        {
+            grid_lock_piece(grid);
+        }
     }
 }
 
