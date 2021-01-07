@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 CFLAGS="$CFLAGS -Wall -Wextra"
 CFLAGS="$CFLAGS -Wundef"
 CFLAGS="$CFLAGS -Wcast-align"
