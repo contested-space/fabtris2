@@ -37,9 +37,6 @@ int main(int argc, char* argv[])
     SDL_Window* gameWindow = sdl_ptr(createWindow("Fabtris 2"));
     SDL_Renderer* renderer = sdl_ptr(createRenderer(gameWindow));
 
-    SDL_Event e;
-
-
     size_t viewport_width = GRID_SQUARE_LENGTH * 6; //leaves 1 square on each size
     SDL_Rect next_viewport = {
         .x = SCREEN_WIDTH - viewport_width,
@@ -78,6 +75,8 @@ int main(int argc, char* argv[])
         .h = SCREEN_HEIGHT
     };
 
+    SDL_Event e;
+
     while (true)
     {
         while(sdl_err(SDL_PollEvent(&e)) != 0)
@@ -87,6 +86,24 @@ int main(int argc, char* argv[])
                 return 0;
             }
         }
+
+
+        if(e.type == SDL_KEYDOWN)
+        {
+            if (e.key.keysym.sym == SDLK_DOWN)
+            {
+                grid_start_soft_drop(grid_screen);
+            }
+        }
+
+        if(e.type == SDL_KEYUP)
+        {
+            if (e.key.keysym.sym == SDLK_DOWN)
+            {
+                grid_stop_soft_drop(grid_screen);
+            }
+        }
+
         const uint8_t* current_key_states = SDL_GetKeyboardState(NULL);
         if (current_key_states[SDL_SCANCODE_X])
         {
@@ -103,10 +120,6 @@ int main(int argc, char* argv[])
         if (current_key_states[SDL_SCANCODE_RIGHT])
         {
             grid_move_piece_right(grid_screen);
-        }
-        if (current_key_states[SDL_SCANCODE_DOWN])
-        {
-            //TODO: faster drop
         }
         if (current_key_states[SDL_SCANCODE_UP])
         {

@@ -118,7 +118,7 @@ void fab_free(struct fabtrimino* fab)
     free(fab);
 }
 
-void fab_draw_moving(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* offset, int32_t partial_move_lateral, int32_t partial_move_vertical)
+void fab_draw_moving(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* offset, int32_t partial_move_lateral, int32_t partial_move_vertical, size_t fall_duration)
 {
     for (size_t i = 0; i < 4; i++)
     {
@@ -133,6 +133,7 @@ void fab_draw_moving(struct fabtrimino* fab, SDL_Renderer* renderer, struct vect
                                    &position,
                                    renderer,
                                    partial_move_lateral,
+                                   fall_duration,
                                    partial_move_vertical);
             }
         }
@@ -141,7 +142,7 @@ void fab_draw_moving(struct fabtrimino* fab, SDL_Renderer* renderer, struct vect
 
 void fab_draw(struct fabtrimino* fab, SDL_Renderer* renderer, struct vector* offset)
 {
-    fab_draw_moving(fab, renderer, offset, 0, 0);
+    fab_draw_moving(fab, renderer, offset, 0, 0, 0);
 }
 
 void fab_rotate_clockwise(struct fabtrimino* fab)

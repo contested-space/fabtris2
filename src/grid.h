@@ -21,7 +21,9 @@ void grid_move_piece_left(struct grid*);
 
 void grid_move_piece_right(struct grid*);
 
-void grid_piece_fall(struct grid*);
+void grid_start_soft_drop(struct grid*);
+
+void grid_stop_soft_drop(struct grid*);
 
 void grid_lock_piece(struct grid*);
 
